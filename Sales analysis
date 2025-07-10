@@ -1,0 +1,24 @@
+import numpy as np
+
+# Step 1: Get user input for each quarter
+sales_input = input("Enter sales for Q1, Q2, Q3, Q4 separated by spaces: ")
+
+# Step 2: Convert input string to NumPy array of numbers
+# Example input: "15000 18000 21000 27000"
+sales_data = np.array(list(map(float, sales_input.strip().split())))
+
+# Validate input
+if len(sales_data) != 4:
+    print("❌ Please enter exactly 4 sales values.")
+else:
+    # Step 3: Calculate total sales
+    total_sales = np.sum(sales_data)
+
+    # Step 4: Calculate percentage increase from Q1 to Q4
+    q1_sales = sales_data[0]
+    q4_sales = sales_data[3]
+    percentage_increase = ((q4_sales - q1_sales) / q1_sales) * 100
+
+    # Step 5: Output results
+    print(f"\n✅ Total annual sales: ₹{total_sales:,.2f}")
+    print(f"📈 Percentage increase from Q1 to Q4: {percentage_increase:.2f}%")
