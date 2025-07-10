@@ -1,0 +1,237 @@
+# -------------------------------
+# Q11: Sales Line, Scatter & Bar Plot
+# -------------------------------
+import matplotlib.pyplot as plt
+
+months = ['Jan', 'Feb', 'Mar', 'Apr']
+sales = [10000, 12000, 15000, 17000]
+
+# 1. Line Plot - shows trend over time
+plt.plot(months, sales, marker='o')
+plt.title('Q11 - Monthly Sales (Line Plot)')
+plt.xlabel('Month')
+plt.ylabel('Sales')
+plt.grid(True)
+plt.show()
+
+# 2. Scatter Plot - shows points without connecting lines
+plt.scatter(months, sales, color='red')
+plt.title('Q11 - Monthly Sales (Scatter Plot)')
+plt.xlabel('Month')
+plt.ylabel('Sales')
+plt.grid(True)
+plt.show()
+
+# 3. Bar Plot - compares individual sales values
+plt.bar(months, sales, color='orange')
+plt.title('Q11 - Monthly Sales (Bar Plot)')
+plt.xlabel('Month')
+plt.ylabel('Sales')
+plt.show()
+
+# -------------------------------
+# Q12: Temperature Line & Rainfall Scatter Plot
+# -------------------------------
+temperature = [30, 32, 35, 37, 36, 34, 33, 31, 29, 28, 26, 25]
+rainfall = [80, 60, 70, 90, 100, 110, 120, 115, 95, 85, 70, 65]
+months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+          'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+# Line plot for temperature
+plt.plot(months, temperature, color='blue', marker='o')
+plt.title('Q12 - Monthly Temperature')
+plt.xlabel('Month')
+plt.ylabel('Temperature (°C)')
+plt.grid(True)
+plt.show()
+
+# Scatter plot for rainfall
+plt.scatter(months, rainfall, color='green')
+plt.title('Q12 - Monthly Rainfall')
+plt.xlabel('Month')
+plt.ylabel('Rainfall (mm)')
+plt.grid(True)
+plt.show()
+
+# -------------------------------
+# Q13: Word Frequency from Text File
+# -------------------------------
+from collections import Counter
+
+# Read and process text file
+with open('sample_text.txt', 'r') as file:
+    text = file.read()
+
+# Convert to lowercase, split into words
+words = text.lower().split()
+
+# Use Counter to count word frequency
+word_freq = Counter(words)
+
+print("Q13 - Word Frequency:\n", word_freq)
+
+# -------------------------------
+# Q14: Frequency Distribution of Customer Ages
+# -------------------------------
+import pandas as pd
+
+ages = [25, 30, 25, 40, 35, 30, 25, 40, 50, 45, 35, 25]
+df = pd.DataFrame({'age': ages})
+
+# value_counts() gives frequency count of each unique value
+frequency = df['age'].value_counts().sort_index()
+
+print("Q14 - Age Frequency Distribution:\n", frequency)
+
+# -------------------------------
+# Q15: Frequency Distribution of Likes
+# -------------------------------
+likes = [10, 20, 15, 10, 25, 20, 10, 15, 30, 20]
+df = pd.DataFrame({'likes': likes})
+
+like_dist = df['likes'].value_counts().sort_index()
+
+print("Q15 - Like Frequency Distribution:\n", like_dist)
+
+# -------------------------------
+# Q16: Word Frequency in Customer Reviews
+# -------------------------------
+reviews = [
+    "Great product and excellent quality",
+    "Product is good and delivery is fast",
+    "Excellent quality and good value"
+]
+
+from collections import Counter
+
+# Combine and preprocess
+words = ' '.join(reviews).lower().split()
+word_freq = Counter(words)
+
+print("Q16 - Word Frequency in Reviews:\n", word_freq)
+
+# -------------------------------
+# Q17: Word Frequency from CSV Feedback with Visualization
+# -------------------------------
+import pandas as pd
+import string
+import matplotlib.pyplot as plt
+from collections import Counter
+from nltk.corpus import stopwords
+import nltk
+nltk.download('stopwords')
+
+# Load CSV with a 'feedback' column
+df = pd.read_csv('data.csv')  # contains column "feedback"
+
+# Define stopwords and preprocessing function
+stop_words = set(stopwords.words('english'))
+
+def clean_text(text):
+    # Lowercase and remove punctuation
+    text = text.lower().translate(str.maketrans('', '', string.punctuation))
+    words = text.split()
+    return [w for w in words if w not in stop_words]
+
+# Apply cleaning to all feedback rows
+all_words = []
+for feedback in df['feedback']:
+    all_words.extend(clean_text(str(feedback)))
+
+# Get frequency count
+freq_dist = Counter(all_words)
+
+# Ask user for N (top N frequent words)
+N = 10
+top_n = freq_dist.most_common(N)
+
+# Print results
+print("Q17 - Top", N, "words:", top_n)
+
+# Plot as bar graph
+words, counts = zip(*top_n)
+plt.bar(words, counts)
+plt.title('Top N Word Frequencies')
+plt.xticks(rotation=45)
+plt.xlabel('Words')
+plt.ylabel('Frequency')
+plt.tight_layout()
+plt.show()
+
+# -------------------------------
+# Q18: Mean, Median, Std, Boxplot & QQ Plot
+# -------------------------------
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import scipy.stats as stats
+
+# Example data
+age = [23, 25, 27, 30, 32, 35, 40, 45, 50]
+fat = [18, 20, 22, 24, 26, 28, 30, 32, 35]
+
+df = pd.DataFrame({'age': age, 'fat': fat})
+
+# Basic stats using pandas
+print("Q18 - Mean Age:", df['age'].mean())
+print("Q18 - Median Age:", df['age'].median())
+print("Q18 - Std Age:", df['age'].std())
+
+print("Q18 - Mean Fat:", df['fat'].mean())
+print("Q18 - Median Fat:", df['fat'].median())
+print("Q18 - Std Fat:", df['fat'].std())
+
+# Boxplot
+sns.boxplot(data=df)
+plt.title('Q18 - Boxplot of Age and Fat %')
+plt.show()
+
+# Scatter plot
+plt.scatter(df['age'], df['fat'])
+plt.title('Q18 - Scatter Plot of Age vs Fat %')
+plt.xlabel('Age')
+plt.ylabel('Fat %')
+plt.grid(True)
+plt.show()
+
+# Q-Q Plot
+stats.probplot(df['age'], dist="norm", plot=plt)
+plt.title('Q18 - Q-Q Plot for Age')
+plt.show()
+
+# -------------------------------
+# Q19: Confidence Interval for Two Groups
+# -------------------------------
+import numpy as np
+import scipy.stats as stats
+
+# Sample data: reductions in blood pressure
+drug_group = [10, 12, 14, 15, 13, 11, 14, 13]
+placebo_group = [5, 6, 7, 5, 6, 7, 6, 5]
+
+# Calculate confidence intervals using t-distribution
+def confidence_interval(data, confidence=0.95):
+    mean = np.mean(data)
+    sem = stats.sem(data)  # standard error of the mean
+    margin = stats.t.ppf((1 + confidence) / 2, len(data) - 1) * sem
+    return (mean - margin, mean + margin)
+
+print("Q19 - 95% CI for Drug Group:", confidence_interval(drug_group))
+print("Q19 - 95% CI for Placebo Group:", confidence_interval(placebo_group))
+
+# -------------------------------
+# Q20: A/B Test - T-Test for Conversion Rate
+# -------------------------------
+# Conversion rates: A and B
+design_a = [1, 0, 1, 1, 0, 1, 1, 0, 1, 0]  # 1 = converted
+design_b = [0, 1, 0, 1, 1, 1, 0, 1, 0, 1]
+
+# Perform independent t-test
+t_stat, p_value = stats.ttest_ind(design_a, design_b)
+
+print("Q20 - T-statistic:", t_stat)
+print("Q20 - P-value:", p_value)
+if p_value < 0.05:
+    print("Q20 - Statistically significant difference")
+else:
+    print("Q20 - No statistically significant difference")
