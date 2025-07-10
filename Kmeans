@@ -1,0 +1,40 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+
+# Step 1: Load the CSV file
+df = pd.read_csv("customer_data.csv")
+
+# Step 2: Select features for clustering
+X = df[['total_amount_spent', 'num_items_purchased']]
+
+# Step 3: Build K-Means model (let’s choose 3 clusters)
+kmeans = KMeans(n_clusters=3, random_state=42)
+df['cluster'] = kmeans.fit_predict(X)
+
+# Step 4: Print centroids
+print("📍 Cluster Centers:\n", kmeans.cluster_centers_)
+
+# Step 5: Visualize the clusters
+plt.figure(figsize=(8, 6))
+colors = ['red', 'green', 'blue']
+for i in range(3):
+    cluster_points = df[df['cluster'] == i]
+    plt.scatter(cluster_points['total_amount_spent'],
+                cluster_points['num_items_purchased'],
+                label=f'Cluster {i}',
+                color=colors[i],
+                s=100, edgecolor='black')
+
+# Plot cluster centers
+centers = kmeans.cluster_centers_
+plt.scatter(centers[:, 0], centers[:, 1], c='yellow', s=200, marker='X', label='Centers')
+
+# Add labels and legend
+plt.title("🛍️ Customer Segments Based on Spending Behavior")
+plt.xlabel("Total Amount Spent")
+plt.ylabel("Number of Items Purchased")
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.show()
