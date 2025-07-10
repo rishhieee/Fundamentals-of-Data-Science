@@ -1,0 +1,31 @@
+import numpy as np
+import pandas as pd
+import scipy.stats as stats
+
+# Load data
+df = pd.read_csv('rare_elements.csv')
+data = df['concentration'].dropna()
+
+# Inputs
+sample_size = int(input("Enter sample size: "))
+confidence_level = float(input("Enter confidence level (e.g. 0.95): "))
+precision_level = float(input("Enter desired precision (e.g. 0.05): "))
+
+# Sampling
+sample = np.random.choice(data, size=sample_size, replace=False)
+
+# Point estimation
+sample_mean = np.mean(sample)
+
+# Confidence interval
+sample_std = np.std(sample, ddof=1)
+sem = sample_std / np.sqrt(sample_size)
+t_crit = stats.t.ppf((1 + confidence_level) / 2, df=sample_size - 1)
+margin = t_crit * sem
+ci_lower = sample_mean - margin
+ci_upper = sample_mean + margin
+
+# Output
+print(f"\nMean: {sample_mean:.4f}")
+print(f"{int(confidence_level*100)}% Confidence Interval: ({ci_lower:.4f}, {ci_upper:.4f})")
+print(f"Precision check: ±{margin:.4f} vs required ±{precision_level}")
