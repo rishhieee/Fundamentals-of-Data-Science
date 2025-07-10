@@ -1,0 +1,185 @@
+# -------------------------------
+# Q1: Average Score by Subject
+# -------------------------------
+import numpy as np
+
+student_scores = np.array([
+    [85, 90, 88, 92],
+    [78, 84, 80, 86],
+    [92, 88, 94, 90],
+    [70, 75, 72, 78]
+])
+
+# np.mean(..., axis=0) computes average column-wise (i.e., for each subject)
+subject_averages = np.mean(student_scores, axis=0)
+subjects = ['Math', 'Science', 'English', 'History']
+
+# np.argmax returns the index of the max value — used to find top subject
+highest_subject = subjects[np.argmax(subject_averages)]
+
+print("Q1 - Average scores:", dict(zip(subjects, subject_averages)))
+print("Q1 - Subject with highest average:", highest_subject)
+
+# -------------------------------
+# Q2: Average Price of All Products
+# -------------------------------
+sales_data = np.array([
+    [100, 150, 200],
+    [80, 120, 160],
+    [90, 130, 170]
+])
+
+# np.mean() computes the average of all values in the array
+average_price = np.mean(sales_data)
+
+print("Q2 - Average price of all products sold:", average_price)
+
+# -------------------------------
+# Q3: Average Sale Price of Houses with >4 Bedrooms
+# -------------------------------
+house_data = np.array([
+    [5, 2000, 450000],
+    [3, 1500, 300000],
+    [6, 2500, 500000],
+    [4, 1800, 350000]
+])
+
+# house_data[:, 0] selects bedroom column; filter using >4 condition
+filtered = house_data[house_data[:, 0] > 4]
+
+# filtered[:, 2] selects price column; mean gives avg sale price
+average_price = np.mean(filtered[:, 2])
+
+print("Q3 - Average sale price (bedrooms > 4):", average_price)
+
+# -------------------------------
+# Q4: Total Sales & % Increase from Q1 to Q4
+# -------------------------------
+sales_data = np.array([15000, 18000, 22000, 27000])
+
+# np.sum adds all sales values
+total_sales = np.sum(sales_data)
+
+# % increase: ((final - initial) / initial) * 100
+percentage_increase = ((sales_data[3] - sales_data[0]) / sales_data[0]) * 100
+
+print("Q4 - Total sales for the year:", total_sales)
+print("Q4 - Percentage increase from Q1 to Q4:", percentage_increase)
+
+# -------------------------------
+# Q5: Average Fuel Efficiency & Improvement Between Models
+# -------------------------------
+fuel_efficiency = np.array([25, 28, 32, 30, 35])
+
+# np.mean gives the overall average
+avg_efficiency = np.mean(fuel_efficiency)
+
+# % improvement = ((final - initial) / initial) * 100
+percentage_improvement = ((fuel_efficiency[4] - fuel_efficiency[0]) / fuel_efficiency[0]) * 100
+
+print("Q5 - Average fuel efficiency:", avg_efficiency)
+print("Q5 - Improvement from model 1 to 5:", percentage_improvement, "%")
+
+# -------------------------------
+# Q6: Total Purchase Cost Including Discounts & Taxes
+# -------------------------------
+item_prices = [100, 200, 150]
+quantities = [2, 1, 3]
+discount_rate = 10
+tax_rate = 5
+
+# zip combines prices and quantities; we compute subtotal by summing p * q
+subtotal = sum(p * q for p, q in zip(item_prices, quantities))
+
+# discount = rate% of subtotal
+discount = subtotal * (discount_rate / 100)
+
+# tax is calculated on the discounted amount
+tax = (subtotal - discount) * (tax_rate / 100)
+
+# total cost = subtotal - discount + tax
+total_cost = subtotal - discount + tax
+
+print("Q6 - Total cost including discount and tax:", total_cost)
+
+# -------------------------------
+# Q7: Order Data Analysis with Pandas
+# -------------------------------
+import pandas as pd
+
+order_data = pd.DataFrame({
+    'customer_id': [101, 102, 101, 103, 102],
+    'order_date': pd.to_datetime(['2023-01-01', '2023-01-02', '2023-01-10', '2023-01-11', '2023-01-15']),
+    'product_name': ['A', 'B', 'A', 'C', 'B'],
+    'order_quantity': [1, 2, 3, 2, 1]
+})
+
+# .groupby + .size() counts how many times each customer appears
+print("Q7 - Orders by customer:\n", order_data.groupby('customer_id').size())
+
+# .groupby + mean on 'order_quantity' gives average quantity per product
+print("Q7 - Avg quantity per product:\n", order_data.groupby('product_name')['order_quantity'].mean())
+
+# .min() and .max() give earliest and latest dates
+print("Q7 - Earliest order date:", order_data['order_date'].min())
+print("Q7 - Latest order date:", order_data['order_date'].max())
+
+# -------------------------------
+# Q8: Top 5 Products Sold the Most
+# -------------------------------
+sales_df = pd.DataFrame({
+    'product_name': ['A', 'B', 'C', 'A', 'B', 'A'],
+    'quantity_sold': [10, 20, 15, 25, 30, 5]
+})
+
+# Group by product, sum quantities, pick top 5 using nlargest
+top5 = sales_df.groupby('product_name')['quantity_sold'].sum().nlargest(5)
+
+print("Q8 - Top 5 most sold products:\n", top5)
+
+# -------------------------------
+# Q9: Property Analysis
+# -------------------------------
+property_data = pd.DataFrame({
+    'property_id': [1, 2, 3, 4],
+    'location': ['NY', 'LA', 'NY', 'SF'],
+    'bedrooms': [3, 5, 4, 6],
+    'area_sqft': [1500, 2000, 1800, 2500],
+    'price': [300000, 500000, 350000, 600000]
+})
+
+# Group by location and get average price
+avg_price = property_data.groupby('location')['price'].mean()
+
+# Filter properties with more than 4 bedrooms and count rows
+more_than_4_bedrooms = property_data[property_data['bedrooms'] > 4].shape[0]
+
+# Find row with max area using .idxmax()
+largest_property = property_data.loc[property_data['area_sqft'].idxmax()]
+
+print("Q9 - Avg price by location:\n", avg_price)
+print("Q9 - Properties with >4 bedrooms:", more_than_4_bedrooms)
+print("Q9 - Largest property:\n", largest_property)
+
+# -------------------------------
+# Q10: Line and Bar Plots with Matplotlib
+# -------------------------------
+import matplotlib.pyplot as plt
+
+months = ['Jan', 'Feb', 'Mar', 'Apr']
+sales = [10000, 12000, 15000, 17000]
+
+# Line Plot
+plt.plot(months, sales, marker='o')  # Line plot with circle markers
+plt.title('Q10 - Monthly Sales (Line Plot)')
+plt.xlabel('Month')
+plt.ylabel('Sales')
+plt.grid(True)
+plt.show()
+
+# Bar Plot
+plt.bar(months, sales, color='skyblue')  # Bar chart with color
+plt.title('Q10 - Monthly Sales (Bar Plot)')
+plt.xlabel('Month')
+plt.ylabel('Sales')
+plt.show()
